@@ -1,23 +1,5 @@
 ﻿#!/bin/bash
 
-# Step 1: Check if migration exists
-echo "Checking for existing migrations..."
-if dotnet ef migrations list | grep -q "createDB"; then
-    echo "Migration 'createDB' already exists. Skipping migration step."
-else
-    # Step 2: Run migrations
-    echo "Running migrations..."
-    dotnet ef migrations add createDB
-    
-    # Check if migration was successful
-    if [ $? -ne 0 ]; then
-        echo "Migration failed."
-        exit 1
-    else
-        echo "Migration 'createDB' added successfully."
-    fi
-fi
-
 # Step 3: Determine Docker Compose file
 compose_file="docker-compose.yml"
 

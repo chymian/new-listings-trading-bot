@@ -1,4 +1,4 @@
-﻿# New Listing Announcement Crypto Trading Bot
+﻿﻿# New Listing Announcement Crypto Trading Bot
 
 This is a cryptocurrency trading bot designed to detect new coin listing announcements on Binance and immediately
 purchase the announced coin on a different exchange (currently configured to Poloniex).
@@ -50,9 +50,8 @@ Rename `appsettings.example.json` to `appsettings.json` and customize the bot:
 ## Get started
 
 - To start running the trading bot, configure your `appsettings.json` and then run `./build.ps1` or `./build.sh`.
-- Check Docker `app` logs for activity.
-- On start the script builds migrations locally before copying over the directory to Docker so if you're building
-  manually, remember to run the migrations first.
+- Check Docker `nelitrabo` logs for activity.
+- On start the script builds migrations in the docker image, so ensure docker is running.
 
 ## Looking for No-Code Trading Bots?
 

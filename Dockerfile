@@ -23,10 +23,13 @@ RUN dotnet publish "./new-listing-bot-cs.csproj" -c $BUILD_CONFIGURATION -o /app
 # Final stage to configure the runtime environment for production
 FROM base AS final
 WORKDIR /app
+RUN apt-get update && apt-get install -y postgresql-client && rm -rf /var/lib/apt/lists/*
 COPY --from=publish /app/publish .
+COPY entrypoint.sh .
+RUN chmod +x entrypoint.sh
 
 # Default entry point for production
-ENTRYPOINT ["dotnet", "new-listing-bot-cs.dll"]
+ENTRYPOINT ["./entrypoint.sh"]
 
 # Development stage to use dotnet watch for hot reload
 FROM build AS dev
@@ -35,4 +38,3 @@ WORKDIR /app
 COPY . . 
 # Use dotnet watch for development with hot reload
 ENTRYPOINT ["dotnet", "watch", "run", "--no-launch-profile", "--urls", "http://+:5000;https://+:5001"]
-
