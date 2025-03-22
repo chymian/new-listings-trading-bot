@@ -1,4 +1,4 @@
-﻿services:
+services:
   app:
     container_name: nelitrabo-app
     image: eb8.org/nelitrabo:latest
