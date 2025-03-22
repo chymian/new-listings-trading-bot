@@ -1,7 +1,7 @@
 #!/bin/sh
 # entrypoint.sh
-until pg_isready -h $DB_HOST -p $DB_PORT; do
-  echo "Waiting for database..."
+until pg_isready -h $POSTGRES_HOST -p $POSTGRES_PORT; do
+  echo "Waiting for database...on host: $POSTGRES_HOST port: $POSTGRES_PORT name: $POSTGRES_NAME user: $POSTGRES_USER "
   sleep 2
 done
 

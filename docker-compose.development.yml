@@ -16,7 +16,7 @@
       - ./src:/src  # Mount the source code directory to allow hot reload
     command: ["dotnet", "watch", "run", "--no-launch-profile", "--urls", "http://+:5000;https://+:5001"]
   database:
-    container_name: nelitrabo-db
+    container_name: ${POSTGRES_HOST}
     image: postgres:16
     env_file:
       - .env
@@ -30,7 +30,7 @@
     volumes:
       - ./postgresql_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -h $$POSTGRES_HOST -p $$POSTGRES_PORT -U $$POSTGRES_USER -d $$POSTGRES_NAME"]
+      test: ["CMD-SHELL", "pg_isready -h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER -d $POSTGRES_NAME"]
       interval: 30s
       retries: 5
       timeout: 10s

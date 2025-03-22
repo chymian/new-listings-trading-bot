@@ -29,7 +29,7 @@ services:
     volumes:
       - ./postgresql_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -h $$POSTGRES_HOST -p $$POSTGRES_PORT -U $$POSTGRES_USER -d $$POSTGRES_NAME"]
+      test: ["CMD-SHELL", "pg_isready -h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER -d $POSTGRES_NAME"]
       interval: 5s
       timeout: 5s
       retries: 5
