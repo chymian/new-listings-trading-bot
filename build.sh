@@ -1,4 +1,4 @@
-﻿#!/bin/bash
+﻿#!/usr/bin/sh
 
 # Step 3: Determine Docker Compose file
 compose_file="docker-compose.yml"
