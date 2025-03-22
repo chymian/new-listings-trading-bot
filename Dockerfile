@@ -22,7 +22,7 @@ RUN dotnet publish "./new-listing-bot-cs.csproj" -c $BUILD_CONFIGURATION -o /app
 # Final stage to configure the runtime environment for production
 FROM base AS final
 WORKDIR /app
-RUN apt-get update && apt-get install -y postgresql-client --no-install-recommends && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y postgresql-client --no-install-recommends && rm -rf /var/lib/apt/lists*
 COPY --from=publish /app/publish .
 COPY entrypoint.sh .
 RUN chmod +x entrypoint.sh
