@@ -1,4 +1,4 @@
-﻿#!/bin/sh
+#!/bin/bash
 
 # Step 3: Determine Docker Compose file
 compose_file="docker-compose.yml"
@@ -12,9 +12,12 @@ for arg in "$@"; do
     fi
 done
 
-# Step 4: Run Docker Compose
+#  Step 4. stop old containers
+docker compose -f $compose_file down  --remove-orphans || true
+
+# Step 5: Run Docker Compose
 echo "Starting Docker Compose with $compose_file..."
-docker compose -f $compose_file up -d --build
+docker compose -f $compose_file up -d --build --remove-orphans || true
 
 # Check Docker Compose status
 if [ $? -ne 0 ]; then
