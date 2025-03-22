@@ -1,6 +1,6 @@
-﻿services:
+﻿﻿services:
   app:
-    container_name: app
+    container_name: nelitrabo-app
     build:
       context: .
       dockerfile: Dockerfile
@@ -16,18 +16,21 @@
       - ./src:/src  # Mount the source code directory to allow hot reload
     command: ["dotnet", "watch", "run", "--no-launch-profile", "--urls", "http://+:5000;https://+:5001"]
   database:
-    container_name: database
-    image: postgres
+    container_name: nelitrabo-db
+    image: postgres:16
+    env_file:
+      - .env
     environment:
-      POSTGRES_DB: data
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
     ports:
-      - "5432:5432"
+      - "${DB_PORT}:${DB_PORT}"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./postgresql_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "admin", "-d", "data"]
+      test: ["CMD-SHELL", "pg_isready -h $$DB_HOST -p $$DB_PORT -U $$DB_USER -d $$DB_NAME"]
       interval: 30s
       retries: 5
       timeout: 10s
