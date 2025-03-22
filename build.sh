@@ -14,7 +14,7 @@ done
 
 # Step 4: Run Docker Compose
 echo "Starting Docker Compose with $compose_file..."
-docker-compose -f $compose_file up -d --build
+docker compose -f $compose_file up -d --build
 
 # Check Docker Compose status
 if [ $? -ne 0 ]; then
