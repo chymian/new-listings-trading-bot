@@ -1,6 +1,6 @@
 ﻿services:
   app:
-    container_name: app
+    container_name: nelitrabo-app
     image: eb8.org/nelitrabo:latest
     build:
       context: .
@@ -15,7 +15,7 @@
       - .env
 
   db:
-    container_name: database
+    container_name: nelitrabo-db
     image: postgres:16
     env_file:
       - .env
