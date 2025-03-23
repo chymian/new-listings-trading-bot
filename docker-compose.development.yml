@@ -1,4 +1,4 @@
-﻿﻿services:
+services:
   app:
     container_name: nelitrabo-app
     build:
@@ -8,33 +8,35 @@
     ports:
       - "8080:80"
     depends_on:
-      - database
+      database:
+        condition: service_healthy
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development  # Set the environment to Development for hot reload
-      - DOTNET_USE_POLLING_FILE_WATCHER=1   # Enable file watching for hot reload
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DOTNET_USE_POLLING_FILE_WATCHER=1
+      - ConnectionStrings__Database=Host=${POSTGRES_HOST};Port=${POSTGRES_PORT};Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
     volumes:
-      - ./src:/src  # Mount the source code directory to allow hot reload
-    command: ["dotnet", "watch", "run", "--no-launch-profile", "--urls", "http://+:5000;https://+:5001"]
+      - ./src:/src
+
   database:
     container_name: ${POSTGRES_HOST}
     image: postgres:16
     env_file:
       - .env
     environment:
-      POSTGRES_HOST: ${POSTGRES_HOST}
-      POSTGRES_PORT: ${POSTGRES_PORT}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
       - "${POSTGRES_PORT}:${POSTGRES_PORT}"
     volumes:
-      - ./postgresql_data:/var/lib/postgresql/data
+      - ./postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER -d $POSTGRES_NAME"]
-      interval: 30s
-      retries: 5
-      timeout: 10s
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
 
 volumes:
   postgres_data:
-    driver: local
+

@@ -1,50 +1,45 @@
-﻿using ExchangeSharp;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-public class Exit
+namespace new_listing_bot_cs.DataAccess.Entities;
+
+public class ExitEntity
 {
-    public decimal? StopLossPrice { get; set; }
-    public decimal? TakeProfitPrice { get; set; }
-
-    public decimal? Pnl { get; set; }
+    public decimal StopLossPrice { get; set; }
+    public decimal TakeProfitPrice { get; set; }
+    public decimal? RealizedPnl { get; set; }
 }
 
-public class OrderResult
+[Owned]
+public class ExchangeOrderResultEntity
 {
+    public string OrderId { get; set; } = null!;
+    public string MarketSymbol { get; set; } = null!;
+    public decimal Amount { get; set; }
+    public decimal AmountFilled { get; set; }
+    public decimal Price { get; set; }
+    public bool IsBuy { get; set; }
+    public DateTime OrderDate { get; set; }
+}
+
+public class OrderResultEntity
+{
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
-    public ExchangeOrderResult ExchangeOrderResult { get; set; } // Owned entity
-    public Exit Exit { get; set; } // Owned entity
+
+    public ExchangeOrderResultEntity ExchangeOrderResult { get; set; } = null!;
+    public ExitEntity ExitStrategy { get; set; } = null!;
 }
 
-public class PortfolioItem
+public class PortfolioEntity
 {
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
-    public ExchangeOrderResult ExchangeOrderResult { get; set; }
-    public Exit Exit { get; set; }
 
-    public static implicit operator PortfolioItem(OrderResult order)
-    {
-        return new PortfolioItem
-        {
-            ExchangeOrderResult = new ExchangeOrderResult
-            {
-                OrderId = order.ExchangeOrderResult.OrderId,
-                ClientOrderId = order.ExchangeOrderResult.ClientOrderId,
-                Result = order.ExchangeOrderResult.Result,
-                MarketSymbol = order.ExchangeOrderResult.MarketSymbol,
-                Amount = order.ExchangeOrderResult.Amount,
-                AmountFilled = order.ExchangeOrderResult.AmountFilled,
-                IsAmountFilledReversed = order.ExchangeOrderResult.IsAmountFilledReversed,
-                Price = order.ExchangeOrderResult.Price,
-                IsBuy = order.ExchangeOrderResult.IsBuy,
-                Fees = order.ExchangeOrderResult.Fees,
-                OrderDate = order.ExchangeOrderResult.OrderDate
-            },
-            Exit = new Exit
-            {
-                StopLossPrice = order.Exit.StopLossPrice,
-                TakeProfitPrice = order.Exit.TakeProfitPrice,
-                Pnl = order.Exit.Pnl
-            }
-        };
-    }
+    [ForeignKey(nameof(OrderResultEntity))]
+    public int OrderResultId { get; set; }
+    public OrderResultEntity OrderResult { get; set; } = null!;
 }
+
