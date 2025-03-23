@@ -10,7 +10,14 @@ var host = Host.CreateDefaultBuilder(args)
         var apiSecret = hostContext.Configuration.GetSection("ApiConfig:ApiSecret").Value;
 
         var botConfig = hostContext.Configuration.GetSection("BotConfig").Get<BotConfig>();
-        services.AddSingleton(botConfig);
+        if (botConfig != null)
+        {
+            services.AddSingleton(botConfig);
+        }
+        else
+        {
+            Console.WriteLine("BotConfig is null. Please check appsettings.Development.json.");
+        }
 
         // Register Services
         services.AddScoped<Exchange>(provider => new Exchange(ExchangeNameEnum.Poloniex, apiKey, apiSecret));
